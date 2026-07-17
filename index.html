@@ -19,11 +19,12 @@
         <button class="nav-item active" data-view="Visão geral" aria-label="Visão geral"><span class="ico">⌂</span><span>Visão geral</span></button>
         <button class="nav-item" data-view="Mercados"><span class="ico">⌁</span><span>Mercados</span></button>
         <button class="nav-item" data-view="Estratégias"><span class="ico">◇</span><span>Estratégias</span></button>
+        <button class="nav-item" data-view="Robô Trade"><span class="ico">⚙</span><span>Robô Trade</span><b id="robotNavStatus">OFF</b></button>
         <button class="nav-item" data-view="Paper trades"><span class="ico">↗</span><span>Paper trades</span><b>3</b></button>
         <button class="nav-item" data-view="Alertas"><span class="ico">◌</span><span>Alertas</span></button>
       </nav>
       <div class="sidebar-bottom">
-        <div class="risk-card"><span class="live-dot"></span><div><strong>Dados simulados</strong><small>Pronto para API Binance</small></div></div>
+        <div class="risk-card"><span class="live-dot"></span><div><strong>Modo paper trade</strong><small>Robô sem ordens reais</small></div></div>
         <button class="user-card"><span class="avatar">SS</span><span><strong>Seu portfólio</strong><small>Conta demo</small></span><span>•••</span></button>
       </div>
     </aside>
@@ -51,7 +52,7 @@
             <div><div class="eyebrow-row"><h1 id="assetName">Bitcoin</h1><span id="assetSymbol">BTC / USDT</span><span class="exchange-pill">Binance Spot</span></div><div class="price-line"><strong id="currentPrice">$64.872,40</strong><span class="price-change">+1,82%</span><small>+$1.161,82 hoje</small></div></div>
           </div>
           <div class="market-stats">
-            <div><small>Máxima 24h</small><strong>$65.214,90</strong></div><div><small>Mínima 24h</small><strong>$63.108,20</strong></div><div><small>Volume 24h</small><strong>$38,4 bi</strong></div><div><small>Market cap</small><strong>$1,28 tri</strong></div>
+            <div><small>Máxima 24h</small><strong id="statHigh">$65.214,90</strong></div><div><small>Mínima 24h</small><strong id="statLow">$63.108,20</strong></div><div><small>Volume 24h</small><strong id="statVolume">$38,4 bi</strong></div><div><small>Fonte</small><strong id="statSource">Simulação</strong></div>
           </div>
         </section>
 
@@ -88,6 +89,7 @@
               </div>
               <div class="probability-row"><div><small>Alvo antes do stop</small><strong>68%</strong><span>327 casos similares</span></div><div><small>Movimento mediano</small><strong class="positive">+1,84%</strong><span>em até 24 candles</span></div></div>
               <button class="wide-btn" id="simulateBtn">Registrar entrada simulada <span>→</span></button>
+              <button class="wide-btn exit-wide" id="closeTradeBtn" disabled>Registrar saída e fechar operação <span>↘</span></button>
               <p class="disclaimer">Análise probabilística, não recomendação financeira.</p>
             </article>
           </aside>
@@ -108,7 +110,7 @@
           </article>
         </section>
 
-        <footer class="page-footer"><span>Vela Analytics · Ambiente demonstrativo</span><span>Dados simulados para validação de interface</span></footer>
+        <footer class="page-footer"><span>Vela Analytics · Ambiente demonstrativo</span><span>Dados públicos Binance · operações simuladas</span></footer>
       </div>
     </main>
   </div>
@@ -136,6 +138,36 @@
       <button class="wide-btn confirm-btn" value="default" id="applyStrategy">Aplicar estratégia <span>→</span></button>
       <small class="modal-note">A estratégia será aplicada ao gráfico e às próximas simulações.</small>
     </form>
+  </dialog>
+  <dialog id="robotModal" class="robot-dialog">
+    <section class="modal-card robot-modal">
+      <div class="modal-head"><div><span class="kicker">AUTOMAÇÃO INTELIGENTE</span><h2>Robô Trade</h2></div><button class="close-btn" id="closeRobot" aria-label="Fechar robô">×</button></div>
+      <p>Monitora os sinais do gráfico, registra entradas e encerra operações simuladas automaticamente no alvo, stop ou reversão.</p>
+      <div class="robot-status-card off" id="robotStatusCard"><span class="robot-orb">⚙</span><div><small id="robotStatusLabel">ROBÔ DESATIVADO</small><strong id="robotStatusText">Configure a estratégia para iniciar</strong></div><i></i></div>
+      <div class="robot-metrics"><div><small>Mercado</small><strong id="robotPair">BTC/USDT</strong></div><div><small>Sinal atual</small><strong id="robotSignal">Aguardando</strong></div><div><small>Confiança</small><strong id="robotScore">-- / 100</strong></div><div><small>Resultado da sessão</small><strong id="robotSessionProfit">$0,00</strong></div></div>
+      <div class="robot-settings">
+        <label>Estratégia<select id="robotStrategy"><option value="boost">Boost agressivo · meta 0,20%</option><option value="scalping">Scalping conservador</option><option value="intraday" selected>Intraday</option><option value="swing">Swing trade</option></select></label>
+        <label>Capital por operação<span><b>$</b><input id="robotInvestment" type="number" value="500" min="10" step="10" /></span></label>
+        <label>Máximo de operações<span><input id="robotMaxTrades" type="number" value="3" min="1" max="20" /><b>por sessão</b></span></label>
+      </div>
+      <div class="robot-rules" id="robotRules"><span><i>✓</i> Entrada: confiança mínima de 70</span><span><i>✓</i> Meta líquida: +2,0%</span><span><i>✓</i> Stop máximo: −1,5%</span></div>
+      <div class="robot-position" id="robotPosition" hidden><div class="robot-position-head"><span><i></i> OPERAÇÃO AUTOMÁTICA ABERTA</span><strong id="robotPositionResult">+0,00%</strong></div><div class="robot-levels"><small>Entrada<strong id="robotEntry">--</strong></small><small>Alvo<strong id="robotTarget">--</strong></small><small>Stop<strong id="robotStop">--</strong></small></div><div class="robot-goal"><div class="robot-goal-head"><span>Progresso da operação</span><strong id="robotGoalPercent">50%</strong></div><div class="robot-goal-track" id="robotGoalTrack"><i id="robotGoalFill"></i><span id="robotGoalMarker"></span><b class="robot-stop-label">STOP · 0%</b><b class="robot-entry-label">ENTRADA · 50%</b><b class="robot-target-label">ALVO · 100%</b></div><small id="robotGoalText">Aguardando movimento a partir da entrada.</small></div></div>
+      <div class="robot-actions"><button class="wide-btn" id="startRobot">▶ Iniciar robô</button><button class="robot-stop-btn" id="stopRobot" disabled>■ Parar e encerrar</button></div>
+      <div class="robot-log-head"><strong>Histórico automático</strong><span id="robotTradeCount">0 operações</span></div>
+      <div class="robot-history" id="robotHistory"><div class="robot-history-empty"><span>◎</span><strong>Nenhuma operação nesta sessão</strong><small>Os registros aparecerão aqui após o robô encontrar um sinal válido.</small></div></div>
+      <small class="modal-note robot-note">Modo demonstrativo: nenhuma ordem real ou chave privada é utilizada.</small>
+    </section>
+  </dialog>
+  <dialog id="marketsModal" class="markets-dialog">
+    <section class="modal-card markets-modal">
+      <div class="modal-head"><div><span class="kicker">BINANCE SPOT</span><h2>Mercados disponíveis</h2></div><button class="close-btn" id="closeMarkets" aria-label="Fechar mercados">×</button></div>
+      <p>Pesquise e selecione qualquer moeda com par USDT disponível na Binance. O gráfico carregará os candles do mercado escolhido.</p>
+      <div class="markets-tools"><div class="markets-search"><span>⌕</span><input id="marketsSearch" placeholder="Buscar BTC, Ethereum, SOL..." autocomplete="off" /></div><button id="refreshMarkets" class="refresh-market-btn">↻ Atualizar</button></div>
+      <div class="markets-summary"><span><i></i> <b id="marketCount">0</b> pares USDT</span><span id="marketsUpdated">Carregando dados...</span></div>
+      <div class="market-table-head"><span>Ativo</span><span>Preço</span><span>24h</span><span>Volume</span></div>
+      <div class="market-table" id="marketTable"><div class="market-loading"><i></i><strong>Consultando mercados</strong><small>Conectando à Binance Spot...</small></div></div>
+      <div class="market-footnote"><span>Dados públicos · nenhuma chave de API necessária</span><span>Selecione um ativo para abrir no gráfico</span></div>
+    </section>
   </dialog>
   <div class="toast" id="toast"><span>✓</span><div><strong>Operação simulada criada</strong><small>Agora acompanhamos sua meta líquida.</small></div></div>
   <div class="goal-alert" id="goalAlert"><span class="goal-alert-icon">◎</span><div><small id="goalAlertLabel">ALERTA DE META</small><strong id="goalAlertTitle">Preço próximo ao alvo</strong><p id="goalAlertText">Acompanhe a operação.</p></div><i></i></div>
