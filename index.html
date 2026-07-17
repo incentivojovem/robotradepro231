@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07100f" />
+  <title>Vela — Inteligência de mercado cripto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>vela<span class="brand-dot">.</span></span></div>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <button class="nav-item active" data-view="Visão geral" aria-label="Visão geral"><span class="ico">⌂</span><span>Visão geral</span></button>
+        <button class="nav-item" data-view="Mercados"><span class="ico">⌁</span><span>Mercados</span></button>
+        <button class="nav-item" data-view="Estratégias"><span class="ico">◇</span><span>Estratégias</span></button>
+        <button class="nav-item" data-view="Paper trades"><span class="ico">↗</span><span>Paper trades</span><b>3</b></button>
+        <button class="nav-item" data-view="Alertas"><span class="ico">◌</span><span>Alertas</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="risk-card"><span class="live-dot"></span><div><strong>Dados simulados</strong><small>Pronto para API Binance</small></div></div>
+        <button class="user-card"><span class="avatar">SS</span><span><strong>Seu portfólio</strong><small>Conta demo</small></span><span>•••</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="mobile-brand"><button id="menuBtn" aria-label="Abrir menu">☰</button><strong>vela<span>.</span></strong></div>
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="assetSearch" autocomplete="off" placeholder="Buscar ativo, ex. ETH ou Solana" />
+          <kbd>⌘ K</kbd>
+          <div class="search-results" id="searchResults"></div>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" id="themeBtn" title="Alternar tema" aria-label="Alternar tema">◐</button>
+          <button class="icon-btn notification" title="Notificações" aria-label="Notificações">◌<i></i></button>
+          <button class="primary-btn" id="newTradeBtn"><span>＋</span> Nova operação</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="market-head">
+          <div class="asset-identity">
+            <div class="coin-logo" id="coinLogo">₿</div>
+            <div><div class="eyebrow-row"><h1 id="assetName">Bitcoin</h1><span id="assetSymbol">BTC / USDT</span><span class="exchange-pill">Binance Spot</span></div><div class="price-line"><strong id="currentPrice">$64.872,40</strong><span class="price-change">+1,82%</span><small>+$1.161,82 hoje</small></div></div>
+          </div>
+          <div class="market-stats">
+            <div><small>Máxima 24h</small><strong>$65.214,90</strong></div><div><small>Mínima 24h</small><strong>$63.108,20</strong></div><div><small>Volume 24h</small><strong>$38,4 bi</strong></div><div><small>Market cap</small><strong>$1,28 tri</strong></div>
+          </div>
+        </section>
+
+        <section class="workspace-grid">
+          <article class="panel chart-panel">
+            <div class="chart-toolbar">
+              <div class="timeframes" id="timeframes"><button>5m</button><button class="active">15m</button><button>1h</button><button>4h</button><button>1D</button><button>1S</button></div>
+              <span class="toolbar-separator"></span>
+              <button class="tool-btn active" id="indicatorBtn">◫ Indicadores <span>6</span></button>
+              <button class="tool-btn" id="projectionBtn">◒ Projeção</button>
+              <div class="chart-actions"><button title="Redefinir zoom" id="resetChart">↺</button><button title="Tela cheia" id="fullscreenBtn">⛶</button></div>
+            </div>
+            <div class="indicator-legend">
+              <span><i style="background:#65d9ac"></i>EMA 9 <b id="ema9Label">64.714</b></span><span><i style="background:#e8bc69"></i>EMA 21 <b id="ema21Label">64.452</b></span><span><i style="background:#9678ef"></i>EMA 50 <b id="ema50Label">63.981</b></span><span><i style="background:#73a5ff"></i>VWAP <b id="vwapLabel">64.108</b></span>
+            </div>
+            <div class="chart-wrap" id="chartWrap">
+              <canvas id="priceChart"></canvas>
+              <div class="current-price-pulse" id="currentPricePulse" aria-hidden="true"></div>
+              <div class="chart-tooltip" id="chartTooltip"></div>
+              <div class="chart-badge entry-badge"><span>▲</span><div><small>ENTRADA PROVÁVEL</small><strong>76% confiança</strong></div></div>
+              <div class="forecast-label"><span></span> PROJEÇÃO · 24 CANDLES</div>
+            </div>
+            <div class="chart-foot">
+              <span><i class="status-dot"></i> Mercado aberto</span><span class="marker-key"><i></i> Entradas +0,4% a +1%</span><span id="activeStrategy">Intraday · 15m / 1h / 4h</span><span>UTC−3</span>
+            </div>
+          </article>
+
+          <aside class="analysis-column">
+            <article class="panel score-panel">
+              <div class="panel-title"><div><span class="kicker">ANÁLISE INTELIGENTE</span><h2>Entrada provável</h2></div><span class="live-pill"><i></i> AO VIVO</span></div>
+              <div class="score-area"><div class="score-ring" style="--score:76"><div><strong>76</strong><small>/ 100</small></div></div><div class="score-copy"><strong>Configuração favorável</strong><p>Condições alinhadas em 15m e confirmadas no gráfico de 1h.</p></div></div>
+              <div class="factor-list">
+                <div><span>Tendência</span><div><i style="width:86%"></i></div><b>19/22</b></div><div><span>Momentum</span><div><i style="width:78%"></i></div><b>14/18</b></div><div><span>Volume</span><div><i style="width:75%"></i></div><b>12/16</b></div><div><span>Estrutura</span><div><i style="width:79%"></i></div><b>11/14</b></div><div><span>Multi-tempo</span><div><i style="width:80%"></i></div><b>8/10</b></div>
+              </div>
+              <div class="probability-row"><div><small>Alvo antes do stop</small><strong>68%</strong><span>327 casos similares</span></div><div><small>Movimento mediano</small><strong class="positive">+1,84%</strong><span>em até 24 candles</span></div></div>
+              <button class="wide-btn" id="simulateBtn">Registrar entrada simulada <span>→</span></button>
+              <p class="disclaimer">Análise probabilística, não recomendação financeira.</p>
+            </article>
+          </aside>
+        </section>
+
+        <section class="lower-grid">
+          <article class="panel operation-panel">
+            <div class="panel-heading"><div><span class="kicker">OPERAÇÃO ATUAL</span><h2>Plano da operação</h2></div><span class="status-pill">● Em observação</span></div>
+            <div class="levels-grid"><div><small>Entrada</small><strong id="entryPrice">$64.250,00</strong><span>Preço confirmado</span></div><div class="target"><small>Alvo líquido <b id="targetPercentLabel">+2,00%</b></small><strong id="targetPrice">$65.731,90</strong><span>Custos já considerados</span></div><div class="stop"><small>Stop técnico</small><strong id="stopPrice">$63.372,80</strong><span>−1,37% · 1,5× ATR</span></div><div><small>Risco / retorno</small><strong>1,70</strong><span>Dentro do mínimo</span></div></div>
+            <div class="progress-head"><span>Progresso até a meta</span><strong id="progressLabel">41%</strong></div><div class="goal-track"><i id="goalProgress" style="width:41%"></i><span class="entry-pin" style="left:0">Entrada</span><span class="current-pin" id="currentPin" style="left:41%">Agora</span><span class="goal-pin">Meta</span></div>
+            <div class="net-result"><div><small>Lucro bruto atual</small><strong>+0,97%</strong></div><span>−</span><div><small>Custos estimados</small><strong class="negative">0,30%</strong></div><span>=</span><div><small>Lucro líquido</small><strong class="positive" id="netProfit">+0,67%</strong></div><div class="remaining"><small>Faltam para a meta</small><strong id="remainingProfit">1,33%</strong></div></div>
+            <div class="operation-actions"><button class="secondary-btn" id="trailingBtn">◇ Ativar trailing stop</button><button class="exit-btn" id="exitTradeBtn">↘ Registrar saída</button></div>
+          </article>
+
+          <article class="panel context-panel">
+            <div class="panel-heading"><div><span class="kicker">CONTEXTO</span><h2>Por que este sinal?</h2></div><button class="more-btn">•••</button></div>
+            <ul class="reason-list"><li><span>✓</span><div><strong>Tendência de alta confirmada</strong><small>EMA 9 &gt; 21 &gt; 50 no gráfico de 1 hora</small></div></li><li><span>✓</span><div><strong>Volume comprador acima da média</strong><small>+31% em relação aos últimos 20 candles</small></div></li><li><span>✓</span><div><strong>Reteste bem-sucedido</strong><small>Antiga resistência em $64.180 virou suporte</small></div></li><li class="warning"><span>!</span><div><strong>Atenção à resistência próxima</strong><small>Zona relevante entre $65.700 e $65.950</small></div></li></ul>
+          </article>
+        </section>
+
+        <footer class="page-footer"><span>Vela Analytics · Ambiente demonstrativo</span><span>Dados simulados para validação de interface</span></footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="tradeModal">
+    <form method="dialog" class="modal-card" id="tradeForm">
+      <div class="modal-head"><div><span class="kicker">PAPER TRADING</span><h2>Nova operação simulada</h2></div><button value="cancel" class="close-btn" aria-label="Fechar">×</button></div>
+      <p>Defina sua meta líquida. Taxas e slippage entram automaticamente no preço-alvo.</p>
+      <div class="form-grid"><label>Valor investido<span><b>$</b><input id="investment" type="number" value="500" min="10" /></span></label><label>Lucro líquido desejado<span><input id="profitTarget" type="number" value="2" step="0.1" min="0.1" /><b>%</b></span></label><label>Taxa de compra<span><input id="buyFee" type="number" value="0.10" step="0.01" /><b>%</b></span></label><label>Taxa de venda<span><input id="sellFee" type="number" value="0.10" step="0.01" /><b>%</b></span></label><label>Slippage por lado<span><input id="slippage" type="number" value="0.05" step="0.01" /><b>%</b></span></label><label>Risco máximo<span><input id="maxRisk" type="number" value="1.5" step="0.1" /><b>%</b></span></label></div>
+      <div class="calculated-target"><div><small>Preço-alvo estimado</small><strong id="modalTarget">$65.738,32</strong></div><div><small>Lucro esperado</small><strong id="expectedProfit">$10,00</strong></div></div>
+      <button class="wide-btn confirm-btn" value="default" id="confirmTrade">Confirmar simulação <span>→</span></button>
+      <small class="modal-note">Nenhuma ordem real será enviada.</small>
+    </form>
+  </dialog>
+  <dialog id="strategyModal">
+    <form method="dialog" class="modal-card strategy-modal" id="strategyForm">
+      <div class="modal-head"><div><span class="kicker">MOTOR DE ESTRATÉGIAS</span><h2>Escolha seu perfil operacional</h2></div><button value="cancel" class="close-btn" aria-label="Fechar estratégias">×</button></div>
+      <p>Cada perfil ajusta os tempos gráficos, a confiança mínima, a meta e o risco. Você pode alterar os valores depois.</p>
+      <div class="strategy-list">
+        <button type="button" class="strategy-card" data-strategy="scalping"><span class="strategy-icon">ϟ</span><span><strong>Scalping conservador</strong><small>Entrada 5m · confirmação 15m · tendência 1h</small></span><b>Meta 0,8%</b></button>
+        <button type="button" class="strategy-card active" data-strategy="intraday"><span class="strategy-icon">◇</span><span><strong>Intraday</strong><small>Entrada 15m · confirmação 1h · tendência 4h</small></span><b>Meta 2,0%</b></button>
+        <button type="button" class="strategy-card" data-strategy="swing"><span class="strategy-icon">⌁</span><span><strong>Swing trade</strong><small>Entrada 4h · confirmação 1D · tendência 1S</small></span><b>Meta 4,0%</b></button>
+      </div>
+      <div class="strategy-summary"><div><small>Pontuação mínima</small><strong id="strategyScore">70 / 100</strong></div><div><small>Risco máximo</small><strong id="strategyRisk">1,5%</strong></div><div><small>Perfil de exposição</small><strong id="strategyExposure">Moderado</strong></div></div>
+      <button class="wide-btn confirm-btn" value="default" id="applyStrategy">Aplicar estratégia <span>→</span></button>
+      <small class="modal-note">A estratégia será aplicada ao gráfico e às próximas simulações.</small>
+    </form>
+  </dialog>
+  <div class="toast" id="toast"><span>✓</span><div><strong>Operação simulada criada</strong><small>Agora acompanhamos sua meta líquida.</small></div></div>
+  <div class="goal-alert" id="goalAlert"><span class="goal-alert-icon">◎</span><div><small id="goalAlertLabel">ALERTA DE META</small><strong id="goalAlertTitle">Preço próximo ao alvo</strong><p id="goalAlertText">Acompanhe a operação.</p></div><i></i></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Codex and local workspace metadata
+.agents/
+.codex/
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+
+# Local and generated files
+node_modules/
+dist/
+*.log
+.DS_Store
+Thumbs.db
