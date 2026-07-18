@@ -114,7 +114,7 @@
           </article>
         </section>
 
-        <footer class="page-footer"><span>Dz20.06 Analytics · Ambiente demonstrativo</span><span>Dados públicos Binance · operações simuladas</span></footer>
+        <footer class="page-footer"><span>Dz20.06 Analytics · Ambiente demonstrativo</span><a class="footer-contact" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=robotradedz20.06%40gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Enviar e-mail para robotradedz20.06@gmail.com">Contato: robotradedz20.06@gmail.com</a><span>Dados públicos Binance · operações simuladas</span></footer>
       </div>
     </main>
   </div>
@@ -143,8 +143,8 @@
       <small class="modal-note">A estratégia será aplicada ao gráfico e às próximas simulações.</small>
     </form>
   </dialog>
-  <dialog id="robotModal" class="robot-dialog">
-    <section class="modal-card robot-modal">
+  <section id="robotPage" class="robot-page" hidden>
+    <div class="robot-page-surface">
       <div class="robot-page-head"><div><span class="kicker">AUTOMAÇÃO INTELIGENTE</span><h2>Robô Trade</h2><p>Monitora os sinais do gráfico e gerencia operações simuladas. No Boost, uma posição negativa fica protegida pela trava 0×0 e só pode ser encerrada sem perda.</p></div><button class="close-btn robot-page-close" id="closeRobot" aria-label="Voltar ao painel"><span>←</span> Voltar ao painel</button></div>
       <div class="robot-status-card off" id="robotStatusCard"><span class="robot-orb">⚙</span><div><small id="robotStatusLabel">ROBÔ DESATIVADO</small><strong id="robotStatusText">Configure a estratégia para iniciar</strong></div><i></i></div>
       <div class="robot-metrics"><div><small>Mercado</small><strong id="robotPair">BTC/USDT</strong></div><div><small>Sinal atual</small><strong id="robotSignal">Aguardando</strong></div><div><small>Confiança</small><strong id="robotScore">-- / 100</strong></div><div><small>Resultado da sessão</small><strong id="robotSessionProfit">$0,00</strong></div></div>
@@ -166,8 +166,8 @@
           <small class="modal-note robot-note">Modo demonstrativo: nenhuma ordem real ou chave privada é utilizada.</small>
         </section>
       </div>
-    </section>
-  </dialog>
+    </div>
+  </section>
   <dialog id="settingsModal" class="settings-dialog">
     <section class="modal-card settings-modal">
       <div class="modal-head"><div><span class="kicker">PREFERÊNCIAS E CONTA</span><h2 id="settingsTitle">Configurações</h2></div><button class="close-btn" id="closeSettings" aria-label="Fechar configurações">×</button></div>
