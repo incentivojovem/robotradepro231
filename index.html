@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#07100f" />
-  <title>Vela — Inteligência de mercado cripto</title>
+  <meta name="google-client-id" content="" />
+  <title>Dz20.06 — Inteligência de mercado cripto</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,7 +16,7 @@
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>vela<span class="brand-dot">.</span></span></div>
+      <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>Dz20<span class="brand-dot">.06</span></span></div>
       <nav class="main-nav" aria-label="Navegação principal">
         <button class="nav-item active" data-view="Visão geral" aria-label="Visão geral"><span class="ico">⌂</span><span>Visão geral</span></button>
         <button class="nav-item" data-view="Mercados"><span class="ico">⌁</span><span>Mercados</span></button>
@@ -33,7 +34,7 @@
 
     <main class="main">
       <header class="topbar">
-        <div class="mobile-brand"><button id="menuBtn" aria-label="Abrir menu">☰</button><strong>vela<span>.</span></strong></div>
+        <div class="mobile-brand"><button id="menuBtn" aria-label="Abrir menu">☰</button><strong>Dz20<span>.06</span></strong></div>
         <div class="search-wrap">
           <span class="search-icon">⌕</span>
           <input id="assetSearch" autocomplete="off" placeholder="Buscar ativo, ex. ETH ou Solana" />
@@ -43,7 +44,8 @@
         <div class="top-actions">
           <button class="icon-btn" id="themeBtn" title="Alternar tema" aria-label="Alternar tema">◐</button>
           <button class="icon-btn notification" id="notificationBtn" title="Notificações" aria-label="Notificações">◌<i></i></button>
-          <button class="primary-btn" id="newTradeBtn"><span>＋</span> Nova operação</button>
+          <button class="icon-btn" id="settingsBtn" title="Configurações" aria-label="Configurações">⚙</button>
+          <button class="primary-btn login-btn" id="googleLoginBtn"><span class="login-avatar" id="loginAvatar">G</span><b id="loginButtonText">Login</b></button>
         </div>
       </header>
 
@@ -75,7 +77,7 @@
               <div class="current-price-pulse" id="currentPricePulse" aria-hidden="true"></div>
               <div class="chart-tooltip" id="chartTooltip"></div>
               <div class="chart-badge entry-badge"><span>▲</span><div><small>ENTRADA PROVÁVEL</small><strong>76% confiança</strong></div></div>
-              <div class="forecast-label"><span></span> PROJEÇÃO · 24 CANDLES</div>
+              <div class="forecast-label" id="forecastLabel"><span></span> PROJEÇÃO · 24 CANDLES</div>
             </div>
             <div class="chart-foot">
               <span><i class="status-dot"></i> Mercado aberto</span><span class="marker-key"><i></i> Entradas +0,4% a +1%</span><span id="activeStrategy">Intraday · 15m / 1h / 4h</span><span>UTC−3</span>
@@ -112,7 +114,7 @@
           </article>
         </section>
 
-        <footer class="page-footer"><span>Vela Analytics · Ambiente demonstrativo</span><span>Dados públicos Binance · operações simuladas</span></footer>
+        <footer class="page-footer"><span>Dz20.06 Analytics · Ambiente demonstrativo</span><span>Dados públicos Binance · operações simuladas</span></footer>
       </div>
     </main>
   </div>
@@ -144,7 +146,7 @@
   <dialog id="robotModal" class="robot-dialog">
     <section class="modal-card robot-modal">
       <div class="modal-head"><div><span class="kicker">AUTOMAÇÃO INTELIGENTE</span><h2>Robô Trade</h2></div><button class="close-btn" id="closeRobot" aria-label="Fechar robô">×</button></div>
-      <p>Monitora os sinais do gráfico, registra entradas e encerra operações simuladas automaticamente no alvo, stop ou reversão.</p>
+      <p>Monitora os sinais do gráfico e gerencia operações simuladas. No Boost, uma posição negativa fica protegida pela trava 0×0 e só pode ser encerrada sem perda.</p>
       <div class="robot-status-card off" id="robotStatusCard"><span class="robot-orb">⚙</span><div><small id="robotStatusLabel">ROBÔ DESATIVADO</small><strong id="robotStatusText">Configure a estratégia para iniciar</strong></div><i></i></div>
       <div class="robot-metrics"><div><small>Mercado</small><strong id="robotPair">BTC/USDT</strong></div><div><small>Sinal atual</small><strong id="robotSignal">Aguardando</strong></div><div><small>Confiança</small><strong id="robotScore">-- / 100</strong></div><div><small>Resultado da sessão</small><strong id="robotSessionProfit">$0,00</strong></div></div>
       <div class="robot-settings">
@@ -158,6 +160,24 @@
       <div class="robot-log-head"><strong>Histórico automático</strong><span id="robotTradeCount">0 operações</span></div>
       <div class="robot-history" id="robotHistory"><div class="robot-history-empty"><span>◎</span><strong>Nenhuma operação nesta sessão</strong><small>Os registros aparecerão aqui após o robô encontrar um sinal válido.</small></div></div>
       <small class="modal-note robot-note">Modo demonstrativo: nenhuma ordem real ou chave privada é utilizada.</small>
+    </section>
+  </dialog>
+  <dialog id="settingsModal" class="settings-dialog">
+    <section class="modal-card settings-modal">
+      <div class="modal-head"><div><span class="kicker">PREFERÊNCIAS E CONTA</span><h2 id="settingsTitle">Configurações</h2></div><button class="close-btn" id="closeSettings" aria-label="Fechar configurações">×</button></div>
+      <div class="settings-tabs"><button class="active" data-settings-tab="general">Geral</button><button data-settings-tab="account">Conta Google</button></div>
+      <section class="settings-panel active" data-settings-panel="general">
+        <div class="settings-field"><span><strong>Idioma</strong><small>Altera os principais textos da interface</small></span><select id="languageSelect"><option value="pt">Português</option><option value="en">English</option></select></div>
+        <div class="settings-field"><span><strong>Moeda padrão</strong><small>Converte preços, gráfico, carteira e resultados</small></span><select id="currencySelect"><option value="USD">Dólar (USD)</option><option value="EUR">Euro (EUR)</option><option value="BRL">Real (BRL)</option></select></div>
+        <div class="fx-status"><i></i><span><strong id="fxStatusTitle">Câmbio automático</strong><small id="fxStatusText">Buscando cotação pública...</small></span><button id="refreshFxBtn">↻ Atualizar</button></div>
+      </section>
+      <section class="settings-panel" data-settings-panel="account">
+        <div class="profile-card" id="profileCard"><span class="profile-avatar" id="profileAvatar">G</span><div><small>CONTA CONECTADA</small><strong id="profileName">Nenhuma conta</strong><em id="profileEmail">Faça login com o Google</em></div></div>
+        <label class="client-id-field">Google OAuth Client ID<small>Necessário apenas uma vez para autenticar neste domínio.</small><span><input id="googleClientId" autocomplete="off" placeholder="000000000000-....apps.googleusercontent.com" /><button id="saveGoogleClientId">Salvar</button></span></label>
+        <div class="google-signin-wrap" id="googleSignInWrap"><span>Configure o Client ID para habilitar o login Google.</span></div>
+        <button class="logout-btn" id="logoutGoogleBtn" hidden>Sair da conta Google</button>
+        <small class="security-note">O Client ID não é secreto. Este site salva somente nome, e-mail e foto no navegador; para uso real, o token também deve ser validado em um backend.</small>
+      </section>
     </section>
   </dialog>
   <dialog id="marketsModal" class="markets-dialog">
@@ -223,6 +243,7 @@
   </dialog>
   <div class="toast" id="toast"><span>✓</span><div><strong>Operação simulada criada</strong><small>Agora acompanhamos sua meta líquida.</small></div></div>
   <div class="goal-alert" id="goalAlert"><span class="goal-alert-icon">◎</span><div><small id="goalAlertLabel">ALERTA DE META</small><strong id="goalAlertTitle">Preço próximo ao alvo</strong><p id="goalAlertText">Acompanhe a operação.</p></div><i></i></div>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="finance.js"></script>
   <script src="app.js"></script>
 </body>

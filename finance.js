@@ -11,12 +11,12 @@ function localDayKey(timestamp=Date.now()){
 }
 
 function usdt(value,digits=2){
-  return`${Number(value||0).toLocaleString('pt-BR',{minimumFractionDigits:digits,maximumFractionDigits:digits})} USDT`;
+  return formatMoney(Number(value)||0,digits);
 }
 
 function signedUsdt(value){
   const number=Number(value)||0;
-  return`${number>0?'+':number<0?'−':''}${Math.abs(number).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} USDT`;
+  return`${number>0?'+':number<0?'−':''}${formatMoney(Math.abs(number),2)}`;
 }
 
 function restoreFinanceState(){
@@ -82,7 +82,7 @@ function addNotification(title,text,kind='success'){
 function settleTrade(position,exitPrice,reason){
   const entry=Number(position.entry),exit=Number(exitPrice),investment=Math.min(Number(position.investment)||0,state.portfolio.balance),fees=Math.max(0,Number(position.fees)||0);
   if(!Number.isFinite(entry)||entry<=0||!Number.isFinite(exit)||exit<=0||investment<=0)throw new Error('Dados financeiros inválidos para encerrar a operação.');
-  const gross=(exit/entry-1)*100,calculatedNet=gross-fees*100;
+  const gross=(exit/entry-1)*100,rawNet=gross-fees*100,calculatedNet=Math.abs(rawNet)<1e-8?0:rawNet;
   const value=Math.max(-investment,investment*calculatedNet/100),net=value/investment*100,closedAt=Date.now();
   const record={
     id:financeId('trade'),symbol:position.symbol||state.asset,marketSymbol:position.marketSymbol||state.marketSymbol,
@@ -92,13 +92,13 @@ function settleTrade(position,exitPrice,reason){
     date:new Date(closedAt).toLocaleDateString('pt-BR')
   };
   state.portfolio.trades.unshift(record);state.portfolio.trades=state.portfolio.trades.slice(0,500);recalculateWallet();
-  pushNotification(value>=0?'Operação encerrada com lucro':'Operação encerrada com perda',`${record.symbol}/USDT · ${signedUsdt(value)} · ${record.strategy}`,value>=0?'success':'loss');
+  pushNotification(value>=0?'Operação encerrada com lucro':'Operação encerrada com perda',`${record.symbol}/${displayCurrency()} · ${signedUsdt(value)} · ${record.strategy}`,value>=0?'success':'loss');
   saveFinanceState();renderFinance();return record;
 }
 
 function tradeRow(trade){
   const resultClass=trade.value>=0?'profit':'loss',owner=trade.owner==='robot'?'Robô':'Manual';
-  return`<div class="finance-row"><span><strong>${escapeHtml(trade.symbol)}/USDT · ${owner}</strong><small>${escapeHtml(trade.date||'')} ${escapeHtml(trade.time||'')}</small></span><span><strong>${escapeHtml(trade.strategy||'Manual')}</strong><small>${escapeHtml(trade.reason||'Saída')}</small></span><span><strong>${formatPrice(Number(trade.entry))} → ${formatPrice(Number(trade.exit))}</strong><small>Capital ${usdt(trade.investment)}</small></span><b class="${resultClass}">${signedUsdt(trade.value)}<small>${trade.net>=0?'+':''}${Number(trade.net).toFixed(2).replace('.',',')}%</small></b></div>`;
+  return`<div class="finance-row"><span><strong>${escapeHtml(trade.symbol)}/${displayCurrency()} · ${owner}</strong><small>${escapeHtml(trade.date||'')} ${escapeHtml(trade.time||'')}</small></span><span><strong>${escapeHtml(trade.strategy||'Manual')}</strong><small>${escapeHtml(trade.reason||'Saída')}</small></span><span><strong>${formatPrice(Number(trade.entry))} → ${formatPrice(Number(trade.exit))}</strong><small>Capital ${usdt(trade.investment)}</small></span><b class="${resultClass}">${signedUsdt(trade.value)}<small>${trade.net>=0?'+':''}${Number(trade.net).toFixed(2).replace('.',',')}%</small></b></div>`;
 }
 
 function emptyFinance(title,text){
@@ -107,12 +107,13 @@ function emptyFinance(title,text){
 
 function renderWallet(){
   const stats=walletStats(),initial=state.portfolio.initialBalance,balance=recalculateWallet(),returnPct=initial?(balance/initial-1)*100:0;
-  $('#walletBalance').textContent=usdt(balance);$('#walletInitialBalance').textContent=initial.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-  $('#walletTodayProfit').textContent=`+${stats.profits.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;$('#walletTodayLoss').textContent=`−${stats.losses.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
-  $('#walletNetResult').textContent=signedUsdt(stats.net).replace(' USDT','');$('#walletNetResult').className=stats.net>=0?'positive':'negative';
+  $('#walletBalance').textContent=usdt(balance);$('#walletInitialBalance').textContent=formatMoney(initial,2);
+  $('#walletTodayProfit').textContent=`+${formatMoney(stats.profits,2)}`;$('#walletTodayLoss').textContent=`−${formatMoney(stats.losses,2)}`;
+  $('#walletNetResult').textContent=signedUsdt(stats.net);$('#walletNetResult').className=stats.net>=0?'positive':'negative';
   $('#walletTradeSummary').textContent=`${stats.total} ${stats.total===1?'operação':'operações'} · ${stats.winRate.toFixed(0)}% acerto`;
   $('#walletTotalReturn').textContent=`${returnPct>=0?'+':''}${returnPct.toFixed(2).replace('.',',')}% desde o início`;
-  $('#walletNavBalance').textContent=balance.toLocaleString('pt-BR',{maximumFractionDigits:0});$('#sidebarBalance').textContent=usdt(balance);
+  $('#walletNavBalance').textContent=fromBaseAmount(balance).toLocaleString(state.settings.language==='en'?'en-US':'pt-BR',{maximumFractionDigits:0});$('#sidebarBalance').textContent=usdt(balance);
+  const unit=$('#walletInitialBalance')?.nextElementSibling;if(unit)unit.textContent=`${displayCurrency()} simulado`;const profitUnit=$('#walletTodayProfit')?.nextElementSibling;if(profitUnit)profitUnit.textContent=`${displayCurrency()} realizado`;const lossUnit=$('#walletTodayLoss')?.nextElementSibling;if(lossUnit)lossUnit.textContent=`${displayCurrency()} realizado`;
   $('#walletStrategies').innerHTML=strategyStats().slice(0,4).map(item=>`<div class="strategy-stat"><span><small>${escapeHtml(item.name)}</small><i></i></span><strong class="${item.result>=0?'positive':'negative'}">${signedUsdt(item.result)}</strong><b>${item.total} operações · ${item.total?Math.round(item.wins/item.total*100):0}% acerto</b></div>`).join('');
   const recent=state.portfolio.trades.slice(0,5);$('#walletRecentTrades').innerHTML=recent.map(tradeRow).join('')||emptyFinance('Nenhum lançamento realizado','Encerre uma operação manual ou automática para atualizar a carteira.');
 }
@@ -127,8 +128,8 @@ function renderPaperTrades(){
 
 function renderAlerts(){
   const alerts=state.portfolio.alerts,active=alerts.filter(alert=>alert.active).length;
-  $('#alertsBadge').textContent=String(active);$('#alertAsset').textContent=`${state.asset}/USDT`;
-  $('#priceAlertsList').innerHTML=alerts.map(alert=>`<div class="alert-row"><span><strong>${escapeHtml(alert.symbol)}/USDT</strong><small>${alert.condition==='above'?'Atingir ou superar':'Cair até ou abaixo'}</small></span><span><b>${formatPrice(Number(alert.target))}</b><small>Criado ${new Date(alert.createdAt).toLocaleDateString('pt-BR')}</small></span><span class="alert-status ${alert.active?'':'triggered'}">${alert.active?'ATIVO':'DISPARADO'}</span><button class="delete-alert" data-alert-id="${escapeHtml(alert.id)}" aria-label="Excluir alerta">×</button></div>`).join('')||emptyFinance('Nenhum alerta configurado','Escolha uma condição e um preço-alvo para começar.');
+  $('#alertsBadge').textContent=String(active);$('#alertAsset').textContent=displayPair();
+  $('#priceAlertsList').innerHTML=alerts.map(alert=>`<div class="alert-row"><span><strong>${escapeHtml(alert.symbol)}/${displayCurrency()}</strong><small>${alert.condition==='above'?'Atingir ou superar':'Cair até ou abaixo'}</small></span><span><b>${formatPrice(Number(alert.target))}</b><small>Criado ${new Date(alert.createdAt).toLocaleDateString('pt-BR')}</small></span><span class="alert-status ${alert.active?'':'triggered'}">${alert.active?'ATIVO':'DISPARADO'}</span><button class="delete-alert" data-alert-id="${escapeHtml(alert.id)}" aria-label="Excluir alerta">×</button></div>`).join('')||emptyFinance('Nenhum alerta configurado','Escolha uma condição e um preço-alvo para começar.');
   $$('.delete-alert[data-alert-id]').forEach(button=>button.onclick=()=>deletePriceAlert(button.dataset.alertId));
   const notices=state.portfolio.notifications.slice(0,20);$('#notificationFeed').innerHTML=notices.map(notice=>`<div class="notification-item ${notice.kind==='loss'?'loss':''}"><i>${notice.kind==='loss'?'↘':'✓'}</i><span><strong>${escapeHtml(notice.title)}</strong><small>${escapeHtml(notice.text)}</small></span><time>${new Date(notice.createdAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</time></div>`).join('')||emptyFinance('Sem atividade recente','Os eventos importantes do robô e das operações aparecerão aqui.');
 }
@@ -136,15 +137,15 @@ function renderAlerts(){
 function renderFinance(){renderWallet();renderPaperTrades();renderAlerts()}
 
 function prepareAlertForm(){
-  $('#alertAsset').textContent=`${state.asset}/USDT`;const input=$('#alertTarget');
-  if(!input.value)input.value=Number(state.currentPrice).toFixed(priceDigits(state.currentPrice));
+  $('#alertAsset').textContent=displayPair();const input=$('#alertTarget');
+  if(!input.value)input.value=fromBaseAmount(state.currentPrice).toFixed(priceDigits(state.currentPrice));
 }
 
 function createPriceAlert(event){
-  event.preventDefault();const target=Number($('#alertTarget').value),condition=$('#alertCondition').value;
+  event.preventDefault();const target=toBaseAmount($('#alertTarget').value),condition=$('#alertCondition').value;
   if(!Number.isFinite(target)||target<=0){showToast('Preço inválido','Informe um preço-alvo maior que zero.','exit');return}
   state.portfolio.alerts.unshift({id:financeId('alert'),symbol:state.asset,marketSymbol:state.marketSymbol,condition,target,active:true,triggeredAt:null,createdAt:Date.now()});
-  state.portfolio.alerts=state.portfolio.alerts.slice(0,100);saveFinanceState();renderAlerts();showToast('Alerta criado',`${state.asset}/USDT será monitorado em ${formatPrice(target)}.`);$('#alertTarget').value='';prepareAlertForm();
+  state.portfolio.alerts=state.portfolio.alerts.slice(0,100);saveFinanceState();renderAlerts();showToast('Alerta criado',`${displayPair()} será monitorado em ${formatPrice(target)}.`);$('#alertTarget').value='';prepareAlertForm();
 }
 
 function deletePriceAlert(id){
@@ -159,14 +160,14 @@ function evaluatePriceAlerts(){
     if(hit){alert.active=false;alert.triggeredAt=Date.now();triggered.push(alert)}
   });
   if(!triggered.length)return;
-  triggered.forEach(alert=>pushNotification('Alerta de preço disparado',`${alert.symbol}/USDT atingiu ${formatPrice(alert.target)}.`,'success'));
-  saveFinanceState();renderAlerts();const alert=triggered[0];showToast('Alerta de preço disparado',`${alert.symbol}/USDT · ${formatPrice(state.currentPrice)}.`);
+  triggered.forEach(alert=>pushNotification('Alerta de preço disparado',`${alert.symbol}/${displayCurrency()} atingiu ${formatPrice(alert.target)}.`,'success'));
+  saveFinanceState();renderAlerts();const alert=triggered[0];showToast('Alerta de preço disparado',`${alert.symbol}/${displayCurrency()} · ${formatPrice(state.currentPrice)}.`);
 }
 
 function resetWalletSimulation(){
   if(state.order.active||state.robot.active||state.robot.starting){showToast('Operação em andamento','Encerre a operação e pare o robô antes de reiniciar a carteira.','exit');return}
-  const initial=Number($('#initialBalanceInput').value);
-  if(!Number.isFinite(initial)||initial<10){showToast('Saldo inicial inválido','Use um valor igual ou superior a 10 USDT.','exit');return}
+  const initial=toBaseAmount($('#initialBalanceInput').value);
+  if(!Number.isFinite(initial)||initial<10){showToast('Saldo inicial inválido','Use um valor equivalente ou superior a 10 USD.','exit');return}
   if(!confirm('Reiniciar a carteira e apagar todo o histórico de paper trades deste navegador?'))return;
   state.portfolio.initialBalance=initial;state.portfolio.balance=initial;state.portfolio.trades=[];state.portfolio.notifications=[];state.robot.trades=[];state.robot.sessionProfit=0;
   saveFinanceState();renderFinance();renderRobotUI();showToast('Simulação reiniciada',`Novo saldo inicial: ${usdt(initial)}.`);
@@ -185,5 +186,5 @@ function setupFinanceUI(){
   $('#clearNotificationsBtn').onclick=()=>{state.portfolio.notifications=[];saveFinanceState();renderAlerts()};
 }
 
-function initializeFinance(){restoreFinanceState();$('#initialBalanceInput').value=String(state.portfolio.initialBalance);setupFinanceUI();renderFinance()}
+function initializeFinance(){restoreFinanceState();$('#initialBalanceInput').value=String(fromBaseAmount(state.portfolio.initialBalance).toFixed(2));setupFinanceUI();renderFinance()}
 function availablePaperBalance(){return Math.max(0,Number(state.portfolio.balance)||0)}
