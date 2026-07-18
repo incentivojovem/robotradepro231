@@ -145,21 +145,27 @@
   </dialog>
   <dialog id="robotModal" class="robot-dialog">
     <section class="modal-card robot-modal">
-      <div class="modal-head"><div><span class="kicker">AUTOMAÇÃO INTELIGENTE</span><h2>Robô Trade</h2></div><button class="close-btn" id="closeRobot" aria-label="Fechar robô">×</button></div>
-      <p>Monitora os sinais do gráfico e gerencia operações simuladas. No Boost, uma posição negativa fica protegida pela trava 0×0 e só pode ser encerrada sem perda.</p>
+      <div class="robot-page-head"><div><span class="kicker">AUTOMAÇÃO INTELIGENTE</span><h2>Robô Trade</h2><p>Monitora os sinais do gráfico e gerencia operações simuladas. No Boost, uma posição negativa fica protegida pela trava 0×0 e só pode ser encerrada sem perda.</p></div><button class="close-btn robot-page-close" id="closeRobot" aria-label="Voltar ao painel"><span>←</span> Voltar ao painel</button></div>
       <div class="robot-status-card off" id="robotStatusCard"><span class="robot-orb">⚙</span><div><small id="robotStatusLabel">ROBÔ DESATIVADO</small><strong id="robotStatusText">Configure a estratégia para iniciar</strong></div><i></i></div>
       <div class="robot-metrics"><div><small>Mercado</small><strong id="robotPair">BTC/USDT</strong></div><div><small>Sinal atual</small><strong id="robotSignal">Aguardando</strong></div><div><small>Confiança</small><strong id="robotScore">-- / 100</strong></div><div><small>Resultado da sessão</small><strong id="robotSessionProfit">$0,00</strong></div></div>
-      <div class="robot-settings">
-        <label>Estratégia<select id="robotStrategy"><option value="boost">Boost agressivo · meta 0,20%</option><option value="scalping">Scalping conservador</option><option value="intraday" selected>Intraday</option><option value="swing">Swing trade</option></select></label>
-        <label>Capital por operação<span><b>$</b><input id="robotInvestment" type="number" value="500" min="10" step="10" /></span></label>
-        <label>Máximo de operações<span><input id="robotMaxTrades" type="number" value="3" min="1" max="20" /><b>por sessão</b></span></label>
+      <div class="robot-workspace">
+        <section class="robot-control-column">
+          <div class="robot-section-title"><div><span class="kicker">CONFIGURAÇÃO</span><strong>Controles da operação</strong></div><small>Defina estratégia, capital e limite</small></div>
+          <div class="robot-settings">
+            <label>Estratégia<select id="robotStrategy"><option value="boost">Boost agressivo · meta 0,20%</option><option value="scalping">Scalping conservador</option><option value="intraday" selected>Intraday</option><option value="swing">Swing trade</option></select></label>
+            <label>Capital por operação<span><b>$</b><input id="robotInvestment" type="number" value="500" min="10" step="10" /></span></label>
+            <label>Máximo de operações<span><input id="robotMaxTrades" type="number" value="3" min="1" max="20" /><b>por sessão</b></span></label>
+          </div>
+          <div class="robot-rules" id="robotRules"><span><i>✓</i> Entrada: confiança mínima de 70</span><span><i>✓</i> Meta líquida: +2,0%</span><span><i>✓</i> Stop máximo: −1,5%</span></div>
+          <div class="robot-position" id="robotPosition" hidden><div class="robot-position-head"><span><i></i> OPERAÇÃO AUTOMÁTICA ABERTA</span><strong id="robotPositionResult">+0,00%</strong></div><div class="robot-levels"><small>Entrada<strong id="robotEntry">--</strong></small><small>Alvo<strong id="robotTarget">--</strong></small><small>Stop<strong id="robotStop">--</strong></small></div><div class="robot-goal"><div class="robot-goal-head"><span>Progresso da operação</span><strong id="robotGoalPercent">50%</strong></div><div class="robot-goal-track" id="robotGoalTrack"><i id="robotGoalFill"></i><span id="robotGoalMarker"></span><b class="robot-stop-label">STOP · 0%</b><b class="robot-entry-label">ENTRADA · 50%</b><b class="robot-target-label">ALVO · 100%</b></div><small id="robotGoalText">Aguardando movimento a partir da entrada.</small></div></div>
+          <div class="robot-actions"><button class="wide-btn" id="startRobot">▶ Iniciar robô</button><button class="robot-stop-btn" id="stopRobot" disabled>■ Parar e encerrar</button></div>
+        </section>
+        <section class="robot-history-column">
+          <div class="robot-section-title"><div><span class="kicker">SESSÃO ATUAL</span><strong>Histórico automático</strong></div><span id="robotTradeCount">0 operações</span></div>
+          <div class="robot-history" id="robotHistory"><div class="robot-history-empty"><span>◎</span><strong>Nenhuma operação nesta sessão</strong><small>Os registros aparecerão aqui após o robô encontrar um sinal válido.</small></div></div>
+          <small class="modal-note robot-note">Modo demonstrativo: nenhuma ordem real ou chave privada é utilizada.</small>
+        </section>
       </div>
-      <div class="robot-rules" id="robotRules"><span><i>✓</i> Entrada: confiança mínima de 70</span><span><i>✓</i> Meta líquida: +2,0%</span><span><i>✓</i> Stop máximo: −1,5%</span></div>
-      <div class="robot-position" id="robotPosition" hidden><div class="robot-position-head"><span><i></i> OPERAÇÃO AUTOMÁTICA ABERTA</span><strong id="robotPositionResult">+0,00%</strong></div><div class="robot-levels"><small>Entrada<strong id="robotEntry">--</strong></small><small>Alvo<strong id="robotTarget">--</strong></small><small>Stop<strong id="robotStop">--</strong></small></div><div class="robot-goal"><div class="robot-goal-head"><span>Progresso da operação</span><strong id="robotGoalPercent">50%</strong></div><div class="robot-goal-track" id="robotGoalTrack"><i id="robotGoalFill"></i><span id="robotGoalMarker"></span><b class="robot-stop-label">STOP · 0%</b><b class="robot-entry-label">ENTRADA · 50%</b><b class="robot-target-label">ALVO · 100%</b></div><small id="robotGoalText">Aguardando movimento a partir da entrada.</small></div></div>
-      <div class="robot-actions"><button class="wide-btn" id="startRobot">▶ Iniciar robô</button><button class="robot-stop-btn" id="stopRobot" disabled>■ Parar e encerrar</button></div>
-      <div class="robot-log-head"><strong>Histórico automático</strong><span id="robotTradeCount">0 operações</span></div>
-      <div class="robot-history" id="robotHistory"><div class="robot-history-empty"><span>◎</span><strong>Nenhuma operação nesta sessão</strong><small>Os registros aparecerão aqui após o robô encontrar um sinal válido.</small></div></div>
-      <small class="modal-note robot-note">Modo demonstrativo: nenhuma ordem real ou chave privada é utilizada.</small>
     </section>
   </dialog>
   <dialog id="settingsModal" class="settings-dialog">

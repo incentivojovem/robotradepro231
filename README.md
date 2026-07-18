@@ -19,6 +19,7 @@ Abra `index.html` diretamente no navegador ou sirva a pasta com qualquer servido
 - Simulador de operação com cálculo de alvo líquido incluindo taxas e slippage.
 - Estratégias aplicáveis para scalping, intraday e swing trade.
 - Robô Trade de paper trading com análise automática de médias, tendência, momentum e volume, entradas por confiança mínima e saídas por meta líquida, stop ou reversão.
+- Página dedicada do Robô Trade em tela inteira, com status e métricas no topo, controles/posição à esquerda e histórico da sessão à direita em telas grandes.
 - Controle de capital por operação, limite por sessão, resultado acumulado e histórico das operações automáticas.
 - Carteira simulada persistente com saldo inicial configurável de 1.000 USDT, saldo atual e resultado acumulado.
 - Consolidação automática de lucros e perdas manuais ou do robô no mesmo livro-caixa.
