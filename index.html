@@ -9,14 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="finance.css" />
+  <link rel="stylesheet" href="styles.css?v=20260720-overview1" />
+  <link rel="stylesheet" href="finance.css?v=20260720-overview1" />
 </head>
 <body>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>Dz20<span class="brand-dot">.06</span></span></div>
+      <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span class="brand-name">Dz20<span class="brand-dot">.06</span></span><button type="button" class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Recolher menu" aria-label="Recolher menu lateral" aria-pressed="false">‹</button></div>
       <nav class="main-nav" aria-label="Navegação principal">
         <button class="nav-item active" data-view="Visão geral" aria-label="Visão geral"><span class="ico">⌂</span><span>Visão geral</span></button>
         <button class="nav-item" data-view="Mercados"><span class="ico">⌁</span><span>Mercados</span></button>
@@ -53,50 +53,85 @@
         <section class="market-head">
           <div class="asset-identity">
             <div class="coin-logo" id="coinLogo">₿</div>
-            <div><div class="eyebrow-row"><h1 id="assetName">Bitcoin</h1><span id="assetSymbol">BTC / USDT</span><span class="exchange-pill">Binance Spot</span></div><div class="price-line"><strong id="currentPrice">$64.872,40</strong><span class="price-change">+1,82%</span><small>+$1.161,82 hoje</small></div></div>
+            <div><div class="eyebrow-row"><h1 id="assetName">Bitcoin</h1><span id="assetSymbol">BTC / USDT</span><span class="exchange-pill" id="exchangeStatus">Conectando...</span></div><div class="price-line"><strong id="currentPrice">—</strong><span class="price-change">—</span><small id="dailyPriceChange">—</small></div></div>
           </div>
           <div class="market-stats">
-            <div><small>Máxima 24h</small><strong id="statHigh">$65.214,90</strong></div><div><small>Mínima 24h</small><strong id="statLow">$63.108,20</strong></div><div><small>Volume 24h</small><strong id="statVolume">$38,4 bi</strong></div><div><small>Fonte</small><strong id="statSource">Simulação</strong></div>
+            <div><small>Máxima 24h</small><strong id="statHigh">—</strong></div><div><small>Mínima 24h</small><strong id="statLow">—</strong></div><div><small>Volume 24h</small><strong id="statVolume">—</strong></div><div><small>Fonte</small><strong id="statSource">Conectando...</strong></div>
           </div>
         </section>
 
         <section class="workspace-grid">
           <article class="panel chart-panel">
             <div class="chart-toolbar">
-              <div class="timeframes" id="timeframes"><button>5m</button><button class="active">15m</button><button>1h</button><button>4h</button><button>1D</button><button>1S</button></div>
+              <div class="timeframes" id="timeframes"><button data-timeframe="5m">5m</button><button class="active" data-timeframe="15m">15m</button><button data-timeframe="1h">1h</button><button data-timeframe="4h">4h</button><button data-timeframe="1D">1D</button><button data-timeframe="1S">1S</button><button data-timeframe="1M" title="Exibir os últimos 30 dias">Mês</button></div>
               <span class="toolbar-separator"></span>
-              <button class="tool-btn active" id="indicatorBtn">◫ Indicadores <span>6</span></button>
+              <button class="tool-btn active" id="indicatorBtn">◫ Indicadores <span>10</span></button>
+              <button class="tool-btn active mapi-toggle" id="mapiToggleBtn" title="Exibir ou ocultar a MAPI">∿ MAPI</button>
+              <button class="tool-btn active trend-map-toggle" id="trendMapBtn" title="Configurar o mapa de tendências por preço e volume">⌁ Tendência</button>
               <button class="tool-btn" id="projectionBtn">◒ Projeção</button>
               <div class="chart-actions"><button title="Redefinir zoom" id="resetChart">↺</button><button title="Tela cheia" id="fullscreenBtn">⛶</button></div>
             </div>
             <div class="indicator-legend">
-              <span><i style="background:#65d9ac"></i>EMA 9 <b id="ema9Label">64.714</b></span><span><i style="background:#e8bc69"></i>EMA 21 <b id="ema21Label">64.452</b></span><span><i style="background:#9678ef"></i>EMA 50 <b id="ema50Label">63.981</b></span><span><i style="background:#73a5ff"></i>VWAP <b id="vwapLabel">64.108</b></span>
+              <span><i style="background:#65d9ac"></i>EMA 9 <b id="ema9Label">64.714</b></span><span><i style="background:#e8bc69"></i>EMA 21 <b id="ema21Label">64.452</b></span><span><i style="background:#9678ef"></i>EMA 50 <b id="ema50Label">63.981</b></span><span><i style="background:#73a5ff"></i>VWAP <b id="vwapLabel">64.108</b></span><span class="mapi-legend" id="mapiLegend"><i style="background:#3bd695"></i>MAPI <b id="mapiLabel">—</b></span><span class="mapi-legend" id="mapiErLegend"><i style="background:#5b8def"></i>ER <b id="mapiErLabel">—</b></span><span class="trend-map-legend" id="trendMapLegend"><i style="background:linear-gradient(90deg,#31d39a,#ef6d68)"></i>Tendências <b id="trendMapCount">0</b></span>
             </div>
             <div class="chart-wrap" id="chartWrap">
+              <div class="fullscreen-trade-progress" id="fullscreenTradeProgress" hidden>
+                <div class="fullscreen-progress-head"><span id="fullscreenProgressTitle">Progresso da operação</span><strong id="fullscreenProgressPercent">50%</strong></div>
+                <div class="fullscreen-progress-track" id="fullscreenProgressTrack"><i id="fullscreenProgressFill"></i><span id="fullscreenProgressMarker"></span></div>
+                <div class="fullscreen-progress-labels"><b id="fullscreenProgressLeft">ZONA NEGATIVA · 0%</b><b id="fullscreenProgressCenter">0×0 · 50%</b><b>ALVO · 100%</b></div>
+                <small id="fullscreenProgressText">Aguardando movimento da operação.</small>
+              </div>
+              <div class="fullscreen-market-hud" id="fullscreenMarketHud" aria-label="Resumo da análise em tela cheia">
+                <div><small>MOEDA · TEMPO</small><strong id="fullscreenHudAsset">BTC/USDT · 15m</strong></div>
+                <div><small>MAPI</small><strong id="fullscreenHudMapi">Aguardando dados</strong></div>
+                <div><small>TENDÊNCIA</small><strong id="fullscreenHudTrend">Aguardando padrão</strong></div>
+                <div><small>PROJEÇÃO</small><strong id="fullscreenHudProjection">Aguardando cálculo</strong></div>
+                <div><small>MODO DO ROBÔ</small><strong id="fullscreenHudMode">Desativado</strong></div>
+              </div>
+              <div class="fullscreen-notifications" id="fullscreenNotifications" aria-live="polite" aria-atomic="false"></div>
               <canvas id="priceChart"></canvas>
+              <div class="chart-zoom-controls" id="chartZoomControls" aria-label="Controles de zoom do gráfico">
+                <button type="button" id="chartZoomOut" title="Diminuir zoom" aria-label="Diminuir zoom">−</button>
+                <span id="chartZoomLabel">100% · 92 velas</span>
+                <button type="button" id="chartZoomIn" title="Aumentar zoom" aria-label="Aumentar zoom">+</button>
+                <button type="button" id="chartLatestBtn" class="active" title="Voltar ao preço atual">Agora</button>
+              </div>
               <div class="current-price-pulse" id="currentPricePulse" aria-hidden="true"></div>
               <div class="chart-tooltip" id="chartTooltip"></div>
               <div class="chart-badge entry-badge"><span>▲</span><div><small>ENTRADA PROVÁVEL</small><strong>76% confiança</strong></div></div>
               <div class="forecast-label" id="forecastLabel"><span></span> PROJEÇÃO · 24 CANDLES</div>
             </div>
             <div class="chart-foot">
-              <span><i class="status-dot"></i> Mercado aberto</span><span class="marker-key"><i></i> Entradas +0,4% a +1%</span><span id="activeStrategy">Intraday · 15m / 1h / 4h</span><span>UTC−3</span>
+              <span id="marketConnectionStatus"><i class="status-dot"></i> Conectando à Binance</span><span class="marker-key"><i></i> Entradas +0,4% a +1%</span><span id="activeStrategy">Intraday · 15m / 1h / 4h</span><span>UTC−3</span>
             </div>
           </article>
 
-          <aside class="analysis-column">
-            <article class="panel score-panel">
-              <div class="panel-title"><div><span class="kicker">ANÁLISE INTELIGENTE</span><h2>Entrada provável</h2></div><span class="live-pill"><i></i> AO VIVO</span></div>
-              <div class="score-area"><div class="score-ring" style="--score:76"><div><strong>76</strong><small>/ 100</small></div></div><div class="score-copy"><strong>Configuração favorável</strong><p>Condições alinhadas em 15m e confirmadas no gráfico de 1h.</p></div></div>
-              <div class="factor-list">
-                <div><span>Tendência</span><div><i style="width:86%"></i></div><b>19/22</b></div><div><span>Momentum</span><div><i style="width:78%"></i></div><b>14/18</b></div><div><span>Volume</span><div><i style="width:75%"></i></div><b>12/16</b></div><div><span>Estrutura</span><div><i style="width:79%"></i></div><b>11/14</b></div><div><span>Multi-tempo</span><div><i style="width:80%"></i></div><b>8/10</b></div>
-              </div>
-              <div class="probability-row"><div><small>Alvo antes do stop</small><strong>68%</strong><span>327 casos similares</span></div><div><small>Movimento mediano</small><strong class="positive">+1,84%</strong><span>em até 24 candles</span></div></div>
-              <button class="wide-btn" id="simulateBtn">Registrar entrada simulada <span>→</span></button>
-              <button class="wide-btn exit-wide" id="closeTradeBtn" disabled>Registrar saída e fechar operação <span>↘</span></button>
-              <p class="disclaimer">Análise probabilística, não recomendação financeira.</p>
-            </article>
-          </aside>
+        </section>
+
+        <section class="overview-insights">
+          <article class="panel score-panel">
+            <div class="panel-title"><div><span class="kicker">ANÁLISE INTELIGENTE</span><h2>Entrada provável</h2></div><span class="live-pill" id="liveStatus"><i></i> CONECTANDO</span></div>
+            <div class="score-area"><div class="score-ring" style="--score:76"><div><strong>76</strong><small>/ 100</small></div></div><div class="score-copy"><strong>Configuração favorável</strong><p>Condições alinhadas em 15m e confirmadas no gráfico de 1h.</p></div></div>
+            <div class="factor-list">
+              <div><span>Tendência</span><div><i style="width:86%"></i></div><b>19/22</b></div><div><span>Momentum</span><div><i style="width:78%"></i></div><b>14/18</b></div><div><span>Volume</span><div><i style="width:75%"></i></div><b>12/16</b></div><div><span>Estrutura</span><div><i style="width:79%"></i></div><b>11/14</b></div><div><span>Multi-tempo</span><div><i style="width:80%"></i></div><b>8/10</b></div>
+            </div>
+            <div class="probability-row"><div><small>Alvo antes do stop</small><strong>68%</strong><span>327 casos similares</span></div><div><small>Movimento mediano</small><strong class="positive">+1,84%</strong><span>em até 24 candles</span></div></div>
+            <button class="wide-btn" id="simulateBtn">Registrar entrada simulada <span>→</span></button>
+            <button class="wide-btn exit-wide" id="closeTradeBtn" disabled>Registrar saída e fechar operação <span>↘</span></button>
+            <p class="disclaimer">Análise probabilística, não recomendação financeira.</p>
+          </article>
+
+          <article class="panel price-outlook-panel" id="priceOutlookPanel">
+            <div class="panel-title"><div><span class="kicker">CENÁRIOS DE PREÇO</span><h2 id="outlookTitle">Projeção BTC/USDT</h2></div><span class="outlook-status" id="outlookStatus"><i></i> CARREGANDO</span></div>
+            <p class="outlook-intro">Estimativa estatística calculada com tendência e volatilidade dos candles diários da Binance.</p>
+            <div class="outlook-grid">
+              <div class="outlook-horizon"><span class="outlook-period">1 DIA</span><strong id="outlookPrice1d">—</strong><b id="outlookChange1d">—</b><small id="outlookRange1d">Faixa provável: —</small><i class="outlook-meter"><span id="outlookMeter1d"></span></i></div>
+              <div class="outlook-horizon featured"><span class="outlook-period">7 DIAS</span><strong id="outlookPrice7d">—</strong><b id="outlookChange7d">—</b><small id="outlookRange7d">Faixa provável: —</small><i class="outlook-meter"><span id="outlookMeter7d"></span></i></div>
+              <div class="outlook-horizon"><span class="outlook-period">30 DIAS</span><strong id="outlookPrice30d">—</strong><b id="outlookChange30d">—</b><small id="outlookRange30d">Faixa provável: —</small><i class="outlook-meter"><span id="outlookMeter30d"></span></i></div>
+            </div>
+            <div class="outlook-foot"><span id="outlookUpdated">Aguardando histórico diário</span><span>Faixa de 68% · modelo experimental</span></div>
+            <p class="disclaimer">Projeções podem divergir significativamente do mercado e não constituem promessa de retorno.</p>
+          </article>
         </section>
 
         <section class="lower-grid">
@@ -145,29 +180,106 @@
   </dialog>
   <section id="robotPage" class="robot-page" hidden>
     <div class="robot-page-surface">
-      <div class="robot-page-head"><div><span class="kicker">AUTOMAÇÃO INTELIGENTE</span><h2>Robô Trade</h2><p>Monitora os sinais do gráfico e gerencia operações simuladas. No Boost, uma posição negativa fica protegida pela trava 0×0 e só pode ser encerrada sem perda.</p></div><button class="close-btn robot-page-close" id="closeRobot" aria-label="Voltar ao painel"><span>←</span> Voltar ao painel</button></div>
+      <div class="robot-page-head"><div><span class="kicker">AUTOMAÇÃO INTELIGENTE</span><h2>Robô Trade</h2><p>Monitora sinais e gerencia operações simuladas. Boost e DCA bloqueiam a realização negativa em 0×0, mas podem manter capital preso por tempo indeterminado.</p></div><button class="close-btn robot-page-close" id="closeRobot" aria-label="Voltar ao painel"><span>←</span> Voltar ao painel</button></div>
       <div class="robot-status-card off" id="robotStatusCard"><span class="robot-orb">⚙</span><div><small id="robotStatusLabel">ROBÔ DESATIVADO</small><strong id="robotStatusText">Configure a estratégia para iniciar</strong></div><i></i></div>
       <div class="robot-metrics"><div><small>Mercado</small><strong id="robotPair">BTC/USDT</strong></div><div><small>Sinal atual</small><strong id="robotSignal">Aguardando</strong></div><div><small>Confiança</small><strong id="robotScore">-- / 100</strong></div><div><small>Resultado da sessão</small><strong id="robotSessionProfit">$0,00</strong></div></div>
       <div class="robot-workspace">
         <section class="robot-control-column">
           <div class="robot-section-title"><div><span class="kicker">CONFIGURAÇÃO</span><strong>Controles da operação</strong></div><small>Defina estratégia, capital e limite</small></div>
           <div class="robot-settings">
-            <label>Estratégia<select id="robotStrategy"><option value="boost">Boost agressivo · meta 0,20%</option><option value="scalping">Scalping conservador</option><option value="intraday" selected>Intraday</option><option value="swing">Swing trade</option></select></label>
+            <label>Estratégia<select id="robotStrategy"><option value="boost">Boost agressivo · meta configurável</option><option value="dca">DCA inteligente 24h</option><option value="scalping">Scalping conservador</option><option value="intraday" selected>Intraday</option><option value="swing">Swing trade</option></select></label>
+            <label>Modo de entrada<select id="robotEntryMode"><option value="automatic" selected>Automática ao validar sinal</option><option value="confirmation">Confirmar cada seta verde</option></select></label>
             <label>Capital por operação<span><b>$</b><input id="robotInvestment" type="number" value="500" min="10" step="10" /></span></label>
             <label>Máximo de operações<span><input id="robotMaxTrades" type="number" value="3" min="1" max="20" /><b>por sessão</b></span></label>
+            <label id="robotProfitTargetField" hidden>Lucro líquido mínimo<span><input id="robotProfitTarget" type="number" value="0.20" min="0.01" max="100" step="0.01" /><b>%</b></span></label>
+            <label id="robotDcaEntriesField" hidden>Parcelas DCA<select id="robotDcaEntries"><option value="5" selected>5 entradas iguais</option><option value="10">10 entradas iguais</option></select></label>
           </div>
           <div class="robot-rules" id="robotRules"><span><i>✓</i> Entrada: confiança mínima de 70</span><span><i>✓</i> Meta líquida: +2,0%</span><span><i>✓</i> Stop máximo: −1,5%</span></div>
-          <div class="robot-position" id="robotPosition" hidden><div class="robot-position-head"><span><i></i> OPERAÇÃO AUTOMÁTICA ABERTA</span><strong id="robotPositionResult">+0,00%</strong></div><div class="robot-levels"><small>Entrada<strong id="robotEntry">--</strong></small><small>Alvo<strong id="robotTarget">--</strong></small><small>Stop<strong id="robotStop">--</strong></small></div><div class="robot-goal"><div class="robot-goal-head"><span>Progresso da operação</span><strong id="robotGoalPercent">50%</strong></div><div class="robot-goal-track" id="robotGoalTrack"><i id="robotGoalFill"></i><span id="robotGoalMarker"></span><b class="robot-stop-label">STOP · 0%</b><b class="robot-entry-label">ENTRADA · 50%</b><b class="robot-target-label">ALVO · 100%</b></div><small id="robotGoalText">Aguardando movimento a partir da entrada.</small></div></div>
+          <div class="robot-position" id="robotPosition" hidden><div class="robot-position-head"><span><i></i> <b id="robotPositionMode">OPERAÇÃO AUTOMÁTICA ABERTA</b></span><strong id="robotPositionResult">+0,00%</strong></div><div class="robot-levels"><small>Preço médio<strong id="robotEntry">--</strong></small><small>Alvo dinâmico<strong id="robotTarget">--</strong></small><small>Proteção<strong id="robotStop">--</strong></small></div><div class="robot-dca-status" id="robotDcaStatus" hidden><span><small>Entradas</small><strong id="robotDcaFillCount">1 / 5</strong></span><span><small>Capital usado</small><strong id="robotDcaInvested">--</strong></span><span><small>Próxima compra</small><strong id="robotDcaNext">--</strong></span></div><div class="robot-goal"><div class="robot-goal-head"><span>Progresso da operação</span><strong id="robotGoalPercent">50%</strong></div><div class="robot-goal-track" id="robotGoalTrack"><i id="robotGoalFill"></i><span id="robotGoalMarker"></span><b class="robot-stop-label" id="robotLeftLabel">STOP · 0%</b><b class="robot-entry-label" id="robotNeutralLabel">ENTRADA · 50%</b><b class="robot-target-label">ALVO · 100%</b></div><small id="robotGoalText">Aguardando movimento a partir da entrada.</small></div></div>
           <div class="robot-actions"><button class="wide-btn" id="startRobot">▶ Iniciar robô</button><button class="robot-stop-btn" id="stopRobot" disabled>■ Parar e encerrar</button></div>
         </section>
         <section class="robot-history-column">
           <div class="robot-section-title"><div><span class="kicker">SESSÃO ATUAL</span><strong>Histórico automático</strong></div><span id="robotTradeCount">0 operações</span></div>
           <div class="robot-history" id="robotHistory"><div class="robot-history-empty"><span>◎</span><strong>Nenhuma operação nesta sessão</strong><small>Os registros aparecerão aqui após o robô encontrar um sinal válido.</small></div></div>
-          <small class="modal-note robot-note">Modo demonstrativo: nenhuma ordem real ou chave privada é utilizada.</small>
+          <small class="modal-note robot-note">Modo demonstrativo: nenhuma ordem real é enviada. O monitoramento “24h” funciona somente enquanto esta página estiver aberta e conectada.</small>
         </section>
       </div>
     </div>
   </section>
+  <dialog id="signalConfirmModal" class="signal-confirm-dialog">
+    <form method="dialog" class="modal-card signal-confirm-card">
+      <div class="signal-confirm-icon" aria-hidden="true">▲</div>
+      <span class="kicker">SINAL VERDE CONFIRMADO</span>
+      <h2>Autorizar entrada automática?</h2>
+      <p>O sinal atingiu os critérios da estratégia. Confira os dados antes de liberar esta operação simulada.</p>
+      <div class="signal-confirm-grid">
+        <div><small>Mercado</small><strong id="signalConfirmPair">--</strong></div>
+        <div><small>Estratégia</small><strong id="signalConfirmStrategy">--</strong></div>
+        <div><small>Confiança</small><strong id="signalConfirmScore">-- / 100</strong></div>
+        <div><small>Capital</small><strong id="signalConfirmCapital">--</strong></div>
+        <div><small>Preço atual</small><strong id="signalConfirmPrice">--</strong></div>
+      </div>
+      <div class="signal-confirm-actions"><button type="button" class="robot-stop-btn" id="cancelSignalEntry">Ignorar este sinal</button><button type="button" class="wide-btn" id="confirmSignalEntry">Confirmar entrada <span>→</span></button></div>
+      <small class="modal-note">A confirmação vale somente para este sinal. Alvo, stop, taxas e trava Boost permanecem automáticos.</small>
+    </form>
+  </dialog>
+  <dialog id="mapiModal" class="settings-dialog mapi-dialog">
+    <section class="modal-card settings-modal mapi-modal">
+      <div class="modal-head"><div><span class="kicker">INDICADOR ADAPTATIVO · VERSÃO 2.1</span><h2>Configurar MAPI</h2></div><button class="close-btn" id="closeMapi" aria-label="Fechar configuração da MAPI">×</button></div>
+      <p>Média Adaptativa Preditiva Inteligente. O ER acelera a média em tendências limpas e reduz a correção de atraso durante ruído ou volatilidade elevada.</p>
+      <div class="mapi-colors">
+        <label><span><strong>Cor quando sobe</strong><small>Linha e projeção com inclinação positiva</small></span><input type="color" id="mapiUpColor" value="#3bd695" aria-label="Cor da MAPI quando sobe"></label>
+        <label><span><strong>Cor quando cai</strong><small>Linha e projeção com inclinação negativa</small></span><input type="color" id="mapiDownColor" value="#ee746d" aria-label="Cor da MAPI quando cai"></label>
+      </div>
+      <details class="mapi-explanation">
+        <summary>Como funciona e como interpretar a MAPI</summary>
+        <p>A MAPI é uma média móvel adaptativa: acompanha o preço mais rapidamente quando identifica uma tendência organizada e fica mais lenta quando o mercado está lateral ou ruidoso. Isso reduz parte do atraso das médias tradicionais sem obrigar a linha a reagir a cada oscilação curta.</p>
+        <div><span><b>ER — Efficiency Ratio</b><small>Varia de 0 a 1. Próximo de 1 indica movimento direcional limpo; próximo de 0 indica ruído e indecisão.</small></span><span><b>Cruzamento</b><small>Preço acima da MAPI sugere viés comprador; abaixo sugere cautela. Deve ser confirmado com volume, tendência e risco.</small></span><span><b>Inclinação e cores</b><small>A cor de subida aparece quando a MAPI aumenta; a cor de queda aparece quando ela diminui. Você pode personalizar ambas nos seletores acima.</small></span><span><b>Projeção e faixas</b><small>A linha pontilhada estima a direção; os cones de 68% e 95% mostram incerteza crescente. Não são garantia de preço.</small></span></div>
+      </details>
+      <div class="mapi-switches">
+        <label><input type="checkbox" id="mapiVisible" checked><span><strong>Exibir MAPI</strong><small>Linha verde quando sobe e vermelha quando cai</small></span></label>
+        <label><input type="checkbox" id="mapiProjectionVisible" checked><span><strong>Exibir projeção</strong><small>Linha pontilhada com tendência amortecida</small></span></label>
+        <label><input type="checkbox" id="mapiBandsVisible" checked><span><strong>Exibir faixas 68% e 95%</strong><small>Cone estatístico baseado na volatilidade recente</small></span></label>
+        <label><input type="checkbox" id="mapiRobotSignal"><span><strong>Usar no sinal do robô</strong><small>Acrescenta cruzamento, inclinação e ER à pontuação</small></span></label>
+      </div>
+      <div class="mapi-controls">
+        <label><span>Período do Efficiency Ratio <output id="mapiErOutput">14</output></span><input type="range" id="mapiErPeriod" min="5" max="30" value="14"></label>
+        <label><span>Correção de atraso k <output id="mapiLagOutput">0,40</output></span><input type="range" id="mapiLag" min="0" max="100" value="40"></label>
+        <label><span>Freio de volatilidade <output id="mapiVolOutput">0,50</output></span><input type="range" id="mapiVolBrake" min="0" max="100" value="50"></label>
+        <label><span>Horizonte da projeção <output id="mapiHorizonOutput">30</output></span><input type="range" id="mapiHorizon" min="5" max="90" value="30"></label>
+      </div>
+      <div class="mapi-readout"><div><small>MAPI atual</small><strong id="mapiCurrentValue">—</strong></div><div><small>Efficiency Ratio</small><strong id="mapiCurrentEr">—</strong></div><div><small>Regime de volatilidade</small><strong id="mapiCurrentRegime">—</strong></div><div><small>Leitura</small><strong id="mapiCurrentSide">—</strong></div></div>
+      <div class="mapi-actions"><button class="robot-stop-btn" id="resetMapi" type="button">Restaurar padrões</button><button class="wide-btn" id="applyMapi" type="button">Aplicar configuração <span>→</span></button></div>
+      <small class="modal-note">A projeção e as faixas são estimativas estatísticas, não garantia de resultado.</small>
+    </section>
+  </dialog>
+  <dialog id="trendMapModal" class="settings-dialog trend-map-dialog">
+    <section class="modal-card settings-modal trend-map-modal">
+      <div class="modal-head"><div><span class="kicker">PREÇO + VOLUME · PVT</span><h2>Mapa de Tendência</h2></div><button class="close-btn" id="closeTrendMap" aria-label="Fechar mapa de tendência">×</button></div>
+      <p>Compara pivôs do preço com o Price Volume Trend. O marcador surge no segundo pivô, somente depois que o padrão é confirmado pelos candles seguintes.</p>
+      <div class="trend-map-switches">
+        <label><input type="checkbox" id="trendMapVisible" checked><span><strong>Exibir mapeamento</strong><small>Mostra divergências confirmadas no ponto exato</small></span></label>
+        <label><input type="checkbox" id="trendChannelsVisible" checked><span><strong>Exibir canais</strong><small>Projeta suporte e resistência paralelos</small></span></label>
+        <label><input type="checkbox" id="trendLabelsVisible" checked><span><strong>Exibir nomes</strong><small>Forte, média, fraca ou oculta</small></span></label>
+      </div>
+      <details class="trend-map-explanation">
+        <summary>Padrões reconhecidos</summary>
+        <div class="trend-patterns">
+          <span><b>Alta forte</b><small>Preço: mínima menor · PVT: mínima maior</small></span><span><b>Alta média</b><small>Preço: mínima igual · PVT: mínima maior</small></span><span><b>Alta fraca</b><small>Preço: mínima menor · PVT: mínima igual</small></span><span><b>Alta oculta</b><small>Preço: mínima maior · PVT: mínima menor</small></span>
+          <span><b>Baixa forte</b><small>Preço: máxima maior · PVT: máxima menor</small></span><span><b>Baixa média</b><small>Preço: máxima igual · PVT: máxima menor</small></span><span><b>Baixa fraca</b><small>Preço: máxima maior · PVT: máxima igual</small></span><span><b>Baixa oculta</b><small>Preço: máxima menor · PVT: máxima maior</small></span>
+        </div>
+      </details>
+      <div class="trend-map-controls">
+        <label><span>Janela do pivô <output id="trendPivotOutput">3</output></span><input type="range" id="trendPivotWindow" min="2" max="6" value="3"></label>
+        <label><span>Máximo de sinais <output id="trendSignalsOutput">6</output></span><input type="range" id="trendMaxSignals" min="2" max="12" value="6"></label>
+        <label><span>Tolerância de preço <output id="trendPriceOutput">0,15%</output></span><input type="range" id="trendPriceTolerance" min="5" max="40" value="15"></label>
+        <label><span>Zona neutra do PVT <output id="trendPvtOutput">0,35σ</output></span><input type="range" id="trendIndicatorTolerance" min="15" max="80" value="35"></label>
+      </div>
+      <div class="trend-map-readout"><div><small>Último padrão</small><strong id="trendCurrentSignal">Nenhum confirmado</strong></div><div><small>Sinais de alta</small><strong id="trendBullishCount">0</strong></div><div><small>Sinais de baixa</small><strong id="trendBearishCount">0</strong></div><div><small>Motor de volume</small><strong id="trendPvtStatus">Aguardando dados</strong></div></div>
+      <div class="mapi-actions"><button class="robot-stop-btn" id="resetTrendMap" type="button">Restaurar padrões</button><button class="wide-btn" id="applyTrendMap" type="button">Aplicar mapeamento <span>→</span></button></div>
+      <small class="modal-note">Divergência não é ordem de compra ou venda. Pivôs exigem confirmação e aparecem com atraso igual à janela configurada.</small>
+    </section>
+  </dialog>
   <dialog id="settingsModal" class="settings-dialog">
     <section class="modal-card settings-modal">
       <div class="modal-head"><div><span class="kicker">PREFERÊNCIAS E CONTA</span><h2 id="settingsTitle">Configurações</h2></div><button class="close-btn" id="closeSettings" aria-label="Fechar configurações">×</button></div>
@@ -250,7 +362,7 @@
   <div class="toast" id="toast"><span>✓</span><div><strong>Operação simulada criada</strong><small>Agora acompanhamos sua meta líquida.</small></div></div>
   <div class="goal-alert" id="goalAlert"><span class="goal-alert-icon">◎</span><div><small id="goalAlertLabel">ALERTA DE META</small><strong id="goalAlertTitle">Preço próximo ao alvo</strong><p id="goalAlertText">Acompanhe a operação.</p></div><i></i></div>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="finance.js"></script>
-  <script src="app.js"></script>
+  <script src="finance.js?v=20260720-overview1"></script>
+  <script src="app.js?v=20260720-overview1"></script>
 </body>
 </html>
