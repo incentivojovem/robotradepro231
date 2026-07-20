@@ -26,6 +26,7 @@ Use o link do site acima. Para testes locais, abra `index.html` diretamente no n
 - EMA 9, 21 e 50, MAPI adaptativa, volume e níveis de entrada, alvo e stop.
 - MAPI configurável com Efficiency Ratio, correção de atraso, freio de volatilidade, projeção amortecida e faixas estatísticas de 68%/95%; a linha e seus complementos podem ser exibidos ou ocultados.
 - Mapa de Tendência por preço e volume (PVT), com divergências de alta/baixa fortes, médias, fracas e ocultas marcadas no candle de confirmação.
+- Cruzamentos baixistas de EMAs: identifica no fechamento o candle em que a EMA 9 cruza de cima para baixo a EMA 21, classifica a confirmação com preço/EMA 50 e marca o ponto exato no gráfico sem usar candles futuros.
 - Canais visuais de alta e baixa calculados por pares de pivôs, com suporte, resistência paralela e faixa translúcida.
 - Projeção futura com mediana e bandas de probabilidade.
 - Troca de tempos gráficos e tooltip OHLCV, incluindo a opção **Mês** com os 30 candles diários mais recentes.
@@ -111,6 +112,12 @@ São reconhecidos oito padrões: divergências de alta fortes, médias, fracas e
 Os canais de alta usam mínimas ascendentes como suporte e projetam uma resistência paralela. Os canais de baixa usam máximas descendentes como resistência e projetam o suporte. Janela do pivô, quantidade de sinais, tolerância de preço, zona neutra do PVT, rótulos e canais podem ser configurados.
 
 O pivô só pode ser confirmado depois da quantidade de candles definida na janela; portanto, o marcador não é antecipado nem redesenhado como se já fosse conhecido no candle original. Nesta versão, o Mapa de Tendência é somente visual e não altera automaticamente a pontuação ou as operações do robô.
+
+## Cruzamentos baixistas de EMAs
+
+O botão **Cruzamentos**, ao lado da MAPI, exibe ou oculta os pontos em que a EMA 9 passa de cima para baixo da EMA 21. Esse evento é conhecido como cruzamento baixista de médias móveis ou, mais precisamente neste gráfico, cruzamento baixista de EMAs. O termo **Death Cross** não é usado porque normalmente se refere ao par de médias 50/200.
+
+O marcador é criado somente depois do fechamento do candle do cruzamento. Ele recebe confirmação mais forte quando o preço já está abaixo da EMA 21 e a estrutura da EMA 50 também indica enfraquecimento. O algoritmo não exige uma queda posterior para validar o ponto, evitando viés retrospectivo. A função é visual e não abre, fecha ou altera operações automaticamente.
 
 ## Como o DCA inteligente funciona
 

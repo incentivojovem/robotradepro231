@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260720-overview1" />
-  <link rel="stylesheet" href="finance.css?v=20260720-overview1" />
+  <link rel="stylesheet" href="styles.css?v=20260720-cross1" />
+  <link rel="stylesheet" href="finance.css?v=20260720-cross1" />
 </head>
 <body>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
@@ -67,6 +67,7 @@
               <span class="toolbar-separator"></span>
               <button class="tool-btn active" id="indicatorBtn">◫ Indicadores <span>10</span></button>
               <button class="tool-btn active mapi-toggle" id="mapiToggleBtn" title="Exibir ou ocultar a MAPI">∿ MAPI</button>
+              <button class="tool-btn active ema-cross-toggle" id="emaCrossoversBtn" title="Exibir ou ocultar cruzamentos baixistas EMA 9/21">⇣ Cruzamentos <span id="emaCrossCount">0</span></button>
               <button class="tool-btn active trend-map-toggle" id="trendMapBtn" title="Configurar o mapa de tendências por preço e volume">⌁ Tendência</button>
               <button class="tool-btn" id="projectionBtn">◒ Projeção</button>
               <div class="chart-actions"><button title="Redefinir zoom" id="resetChart">↺</button><button title="Tela cheia" id="fullscreenBtn">⛶</button></div>
@@ -362,7 +363,7 @@
   <div class="toast" id="toast"><span>✓</span><div><strong>Operação simulada criada</strong><small>Agora acompanhamos sua meta líquida.</small></div></div>
   <div class="goal-alert" id="goalAlert"><span class="goal-alert-icon">◎</span><div><small id="goalAlertLabel">ALERTA DE META</small><strong id="goalAlertTitle">Preço próximo ao alvo</strong><p id="goalAlertText">Acompanhe a operação.</p></div><i></i></div>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="finance.js?v=20260720-overview1"></script>
-  <script src="app.js?v=20260720-overview1"></script>
+  <script src="finance.js?v=20260720-cross1"></script>
+  <script src="app.js?v=20260720-cross1"></script>
 </body>
 </html>
