@@ -54,9 +54,11 @@ Use o link do site acima. Para testes locais, abra `index.html` diretamente no n
 - Conversão de preços, gráfico, metas, carteira, resultados e alertas pela API pública Frankfurter, com fallback local.
 - Persistência local no navegador para carteira, histórico e alertas, sem conta ou backend.
 - Modo Boost agressivo em 5 minutos, com confiança mínima reduzida, reentrada rápida e encerramento automático ao alcançar +0,20% de lucro líquido após taxas e slippage.
+- Modo **Boost Dinâmico** separado do Boost original: combina tendência das EMAs, MAPI/ER, projeção de inclinação, cruzamento altista 9/21, pullback, rompimento e volume. Exige três dos quatro regimes e ao menos um gatilho; usa score 52, ou 48 somente em alinhamento forte.
+- Leitura do Boost Dinâmico dentro da vela aberta, confirmada por pelo menos três atualizações e 1,5 segundo de persistência. O modo limita a uma entrada por candle e mantém intervalo de cinco segundos depois de cada ação.
 - Barra de progresso da operação automática baseada no preço comprador (`bid`), com uma casa decimal, entrada/0×0 em 50%, avanço verde até o alvo e zona vermelha abaixo de 50%.
 - Estado visual **PAUSADO** quando a cotação estiver vencida e breve confirmação em 100% antes do fechamento automático.
-- Marcadores históricos apenas para entradas com resultado entre +0,4% e +1%.
+- Marcadores históricos de entrada e saída calculados conforme a estratégia selecionada no painel do robô. A simulação percorre somente candles já disponíveis em cada ponto, inclui custos e aplica espaçamento mínimo de três candles no Boost/Boost Dinâmico ou cinco candles nos demais modos para reduzir a poluição visual.
 - Séries, volatilidade, eixo temporal, indicadores e marcadores próprios para cada timeframe.
 - Ponto de preço atual pulsante, registro de saída e trailing stop.
 - Alertas flutuantes de proximidade e atingimento da meta com duração de três segundos.
@@ -94,6 +96,8 @@ O Client ID é público e pode ficar no navegador. Para autenticação de produ�
 A trava 0×0 funciona somente nesta simulação: ela impede que o sistema registre uma saída negativa. Isso não elimina risco de mercado, não garante recuperação e pode deixar a posição e o capital presos por tempo indeterminado. Em negociação real, a ausência de stop pode ampliar perdas não realizadas, liquidação e risco operacional.
 
 O mesmo alerta vale para a proteção 0×0 do DCA. O modo “24h” depende da página aberta e conectada; este projeto não possui servidor executando o robô quando o navegador é fechado. As parcelas DCA ficam reservadas dentro do capital total configurado e não usam multiplicador martingale.
+
+O Boost Dinâmico também usa a trava 0×0. Ele avalia a vela em formação, mas só autoriza uma entrada depois que o alinhamento permanece válido por 1,5 segundo em pelo menos três atualizações. Mesmo assim, indicadores intravela podem mudar antes do fechamento; por isso o modo é experimental e deve ser validado em paper trading antes de qualquer integração com ordens reais.
 
 ## Indicador MAPI
 

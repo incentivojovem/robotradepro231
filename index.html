@@ -188,7 +188,7 @@
         <section class="robot-control-column">
           <div class="robot-section-title"><div><span class="kicker">CONFIGURAÇÃO</span><strong>Controles da operação</strong></div><small>Defina estratégia, capital e limite</small></div>
           <div class="robot-settings">
-            <label>Estratégia<select id="robotStrategy"><option value="boost">Boost agressivo · meta configurável</option><option value="dca">DCA inteligente 24h</option><option value="scalping">Scalping conservador</option><option value="intraday" selected>Intraday</option><option value="swing">Swing trade</option></select></label>
+            <label>Estratégia<select id="robotStrategy"><option value="boostDynamic">Boost Dinâmico · tendência + projeção</option><option value="boost">Boost agressivo · meta configurável</option><option value="dca">DCA inteligente 24h</option><option value="scalping">Scalping conservador</option><option value="intraday" selected>Intraday</option><option value="swing">Swing trade</option></select></label>
             <label>Modo de entrada<select id="robotEntryMode"><option value="automatic" selected>Automática ao validar sinal</option><option value="confirmation">Confirmar cada seta verde</option></select></label>
             <label>Capital por operação<span><b>$</b><input id="robotInvestment" type="number" value="500" min="10" step="10" /></span></label>
             <label>Máximo de operações<span><input id="robotMaxTrades" type="number" value="3" min="1" max="20" /><b>por sessão</b></span></label>
